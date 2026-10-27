@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Faq from '../components/Faq';
+---
+<Layout title="Fase 1 · Propuesta" active="/fase1">
+  <section class="section">
+    <p class="note">Fase 1 · Fundamentación · 10 sept 2026</p>
+    <h1 class="">Descripción, problema, objetivos y metodología</h1>
+    <p class="lead">USAC · CUNOR · Sistemas · Simulación 1 · Ing. José Veliz Cruz · 6 integrantes. Título corregido: Monte Carlo (sin colas, sin timestamps en CSV).</p>
+    <div class="grid grid-2">
+      <div class="panel"><h3>1. Área</h3><p>Comida rápida como sector. Unidad: fila CSV = producto + empresa. 6 cadenas. Enfoque comparativo sin campo ni datos privados.</p></div>
+      <div class="panel"><h3>1.4 Fuente</h3><p>FastFoodNutritionMenuV2.csv · 1,148×14 · McD 329 · KFC 218 · BK 190 · Taco 183 · Wendy's 154 · Pizza Hut 74. Autor/licencia/periodo: no especificado.</p></div>
+      <div class="panel"><h3>2. Problema</h3><p>Alta variación + ausentes + celdas no numéricas. Transformar a dataset limpio, caracterizar y simular selecciones sin inventar datos.</p></div>
+      <div class="panel"><h3>Pregunta</h3><p>¿Cómo caracterizan analítica + Monte Carlo la variabilidad nutricional y comparan escenarios entre cadenas?</p></div>
+      <div class="panel"><h3>3. Objetivo general</h3><p>Analizar y simular menús con el CSV: describir variabilidad, comparar cadenas y evaluar escenarios con estadística + Monte Carlo.</p></div>
+      <div class="panel"><h3>3.2 Específicos</h3><p>Depurar 1,148×14 · normalizar 12 numéricas · EDA por empresa · distribuciones empíricas · simular A–D+E · documentar reproducibilidad.</p></div>
+    </div>
+    <div class="panel" style="margin-top:16px"><h3>4. Metodología decidida</h3><p>Ficha + calidad (Calories from Fat 54.9%, WW 76.3%, 15 filas sección) + plan 9 pasos + Monte Carlo N=10,000 seed=42 + supuestos + Go/Postgres/Astro/React/Docker + ética. Ver propuesta .md completa en PROYECTO FINAL/.</p></div>
+    <h2 style="margin-top:32px">Lo que este proyecto no hace</h2>
+    <Faq client:load />
+  </section>
+</Layout>

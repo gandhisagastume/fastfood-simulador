@@ -1,0 +1,10 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Dashboard from '../components/Dashboard';
+---
+<Layout title="Panel · FastFood Sim" active="/">
+  <section class="section">
+    <h1>Panel del menú</h1>
+    <Dashboard client:load />
+  </section>
+</Layout>

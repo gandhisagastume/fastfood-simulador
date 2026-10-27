@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Fases 2 y 3 · Roadmap" active="/fases">
+  <section class="section">
+    <h1>Roadmap Fase 2 y Fase 3</h1>
+    <p class="lead">De la propuesta al informe final.</p>
+    <div class="grid grid-3">
+      <div class="panel"><div class="note">Fase 1 · 10 sept 2026</div><h3>Fundamentación</h3><p>Docs 1–4 + ficha + plan + supuestos. PDF + brief 8–10 min. ✓ Hecho.</p></div>
+      <div class="panel"><div class="note">Fase 2 · 1 oct 2026</div><h3>Datos + simulación</h3><p>Seed Go → Postgres · EDA · escenarios A–E · notebook + dashboard + doc preliminar · avance 10–15 min.</p></div>
+      <div class="panel"><div class="note">Fase 3 · 2–6 nov 2026</div><h3>Cierre</h3><p>As-is vs to-be · propuesta basada en datos · informe 1–9 · ejecutiva 12–15 min · autoevaluación.</p></div>
+    </div>
+    <div class="panel" style="margin-top:16px"><h3>Cómo se corresponde con los criterios de evaluación</h3>
+      <p>La rúbrica está escrita para llamadas al 911. Este proyecto usa un menú de comida rápida sin tiempos, así que cada criterio se traduce a su equivalente.</p>
+      <div class="tablewrap"><table class="data"><thead><tr><th scope="col">Criterio</th><th scope="col">Qué hace este proyecto</th><th scope="col">Dónde</th></tr></thead><tbody><tr><th scope="row">1.1–1.6 Fundamentación</th><td>Área, problema, objetivos, variables, ficha técnica y supuestos del menú de comida rápida.</td><td>Proyecto · Datos</td></tr><tr><th scope="row">2.1 Limpieza y diccionario</th><td>Reporte de limpieza, atípicos señalados, CSV limpio y diccionario descargables.</td><td>Datos</td></tr><tr><th scope="row">2.2 EDA «por hora, día y tipo»</th><td>El CSV no tiene fecha ni hora. Equivalentes: por cadena y por tipo de producto (bebidas, postres, complementos, platos).</td><td>Panel › Explorar</td></tr><tr><th scope="row">2.3 Ajuste de distribuciones</th><td>Normal, lognormal, exponencial y gamma con prueba de Kolmogorov-Smirnov. No hay llegadas, así que Poisson no aplica: se justifica y se usa la empírica.</td><td>Panel › Simular</td></tr><tr><th scope="row">2.4 Modelo reproducible As-Is</th><td>Monte Carlo en Go con semilla; cada corrida se guarda y se reproduce con un curl.</td><td>Panel › Simular</td></tr><tr><th scope="row">2.5 Validación</th><td>Media simulada contra real con intervalo de confianza, z y KS, para 1,000 a 20,000 repeticiones.</td><td>Panel › Simular</td></tr><tr><th scope="row">2.6 Escenarios To-Be</th><td>Filtros propios, bajo sodio, alta proteína, combo, umbral y tipos de producto.</td><td>Panel › Simular</td></tr><tr><th scope="row">2.7 KPIs</th><td>Equivalentes a espera, cola, SLA y abandono: mediana, P95, % que supera el umbral y balance nutricional.</td><td>Panel › Explorar</td></tr><tr><th scope="row">3.1 As-Is contra To-Be</th><td>Cada escenario con filtros se compara con el menú completo: productos que quedan, mediana, P95 y cambio de la media.</td><td>Panel › Simular</td></tr><tr><th scope="row">3.2 Costo-beneficio</th><td>Costo y beneficio nutricional en % del valor diario. No hay precios en el CSV.</td><td>Panel › Propuesta</td></tr><tr><th scope="row">3.3 Propuesta basada en datos</th><td>Equivalente a la dotación de personal: regla de selección recomendada y mejor comida por cadena.</td><td>Panel › Propuesta</td></tr></tbody></table></div></div>
+  </section>
+</Layout>

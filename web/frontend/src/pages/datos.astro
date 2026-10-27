@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DataExplorer from '../components/DataExplorer';
+import DataQuality from '../components/DataQuality';
+---
+<Layout title="Datos · FastFood Sim" active="/datos">
+  <section class="section">
+    <h1>Datos</h1>
+    <p class="lead">Cómo se limpió el CSV, qué significa cada columna y los productos uno por uno.</p>
+    <DataQuality client:load />
+    <h2 style="margin:28px 0 12px">Explorar los productos</h2>
+    <DataExplorer client:load />
+  </section>
+</Layout>

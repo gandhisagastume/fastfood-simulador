@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+const { title = 'FastFood Sim · Monte Carlo nutricional', active = '' } = Astro.props;
+const links = [
+  ['/', 'Panel'], ['/datos', 'Datos'], ['/fase1', 'Proyecto'], ['/fases', 'Fases']
+];
+---
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <!-- Aplica el tema guardado antes de pintar, para no parpadear. -->
+  <script is:inline>
+    try {
+      const q = { claro: 'light', oscuro: 'dark' }[new URLSearchParams(location.search).get('theme')];
+      const t = q || localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400..800&family=Barlow+Condensed:wght@500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="nav"><div class="wrap nav-inner">
+    <a class="brand" href="/">FastFood Sim<span class="pencil">laboratorio Monte Carlo</span></a>
+    <nav aria-label="Principal">{links.map(([h, l]) => <a href={h} aria-current={active === h ? 'page' : undefined}>{l}</a>)}</nav>
+    <button type="button" class="theme" id="theme-toggle" aria-label="Cambiar tema">
+      <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+      <span class="theme-label"></span>
+    </button>
+  </div></header>
+  <main class="wrap"><slot /></main>
+  <footer><div class="wrap">
+    USAC · CUNOR · Modelación y Simulación 1. Resultados del modelo, no ventas ni consumo real.
+  </div></footer>
+  <script is:inline>
+    (() => {
+      const btn = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+      const sys = matchMedia('(prefers-color-scheme: dark)');
+      const current = () => root.dataset.theme || (sys.matches ? 'dark' : 'light');
+      const paint = () => {
+        const next = current() === 'dark' ? 'claro' : 'oscuro';
+        btn.setAttribute('aria-label', `Cambiar a tema ${next}`);
+        btn.querySelector('.theme-label').textContent = current() === 'dark' ? 'Claro' : 'Oscuro';
+        btn.dataset.mode = current();
+      };
+      btn.addEventListener('click', () => {
+        const t = current() === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = t;
+        try { localStorage.setItem('theme', t); } catch (e) {}
+        paint();
+      });
+      sys.addEventListener('change', paint);
+      paint();
+    })();
+  </script>
+</body>
+</html>

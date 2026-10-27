@@ -1,0 +1,24 @@
+# Dependencias y builds
+node_modules/
+dist/
+.astro/
+
+# Entornos y secretos (solo se versiona la plantilla)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Herramientas locales del editor/asistente
+.agents/
+.claude/
+skills-lock.json
+*.log
+/db/
+
+# Documentos del grupo con datos personales (nombres y carnets) y material del curso
+FASE 1/
+PROYECTO FINAL/*.pdf
+PROYECTO FINAL/PROPUESTA-FINAL-*.md
