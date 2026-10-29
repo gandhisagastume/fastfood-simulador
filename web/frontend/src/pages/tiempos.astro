@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Tiempos from '../components/Tiempos';
+---
+<Layout title="Simulación con tiempos · FastFood Sim" active="/tiempos">
+  <section class="section">
+    <h1>Simulación con tiempos</h1>
+    <p class="lead">Clientes que llegan, hacen fila y se atienden en un día de trabajo. Mide cuánto esperan, cuánta fila se forma y qué tan ocupado está el personal, y prueba si un puesto más o un menú más corto lo mejora.</p>
+    <Tiempos client:load />
+  </section>
+</Layout>

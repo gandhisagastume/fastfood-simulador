@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { api } from '../lib/api';
 import { findings, fmt, fromSim, pct, varMeta, type Row, type VarMeta } from '../lib/stats';
+import { Hint } from './Hint';
 import { Legend, RangeStrip, StatTable } from './StatView';
 
 // [id, nombre, ¿es un escenario To-Be comparable con el menú actual?]
@@ -9,6 +10,18 @@ const SC: [string, string, boolean][] = [
   ['E5', 'Comparar tipos de producto', false], ['D', 'Con mis filtros', true], ['E3', 'Solo bajo sodio (menos de 800 mg)', true],
   ['E4', 'Solo alta proteína (20 g o más)', true], ['E1', 'Combo de 3 productos', false], ['E2', 'Pasarse de un umbral', false]
 ];
+// Explicación sencilla de cada escenario, para el ícono (i).
+const SC_HELP: Record<string, string> = {
+  C: 'Simula cada cadena por separado: cada vez toma al azar un producto de esa cadena. Sirve para comparar cadenas entre sí.',
+  A: 'Junta los productos de todas las cadenas y toma uno al azar. Las cadenas con más productos pesan más.',
+  B: 'Primero elige una cadena al azar (todas igual de probables) y luego un producto de ella. Así McDonald’s no pesa más solo por tener más productos.',
+  E5: 'Simula por tipo de producto (bebidas, postres, complementos y platos), para ver cuál sube más el valor.',
+  D: 'Tú pones los límites (calorías, sodio o proteína) y solo entran productos que los cumplan. Se compara con el menú completo para ver el efecto de la regla.',
+  E3: 'Solo entran productos con menos de 800 mg de sodio. Muestra cuánto bajaría el consumo de sodio con esa regla.',
+  E4: 'Solo entran productos con 20 g o más de proteína. Sirve para ver qué otros nutrientes suben cuando se prioriza la proteína.',
+  E1: 'Arma un combo: toma 3 productos al azar y suma el total, como una comida completa.',
+  E2: 'Cuenta qué tan seguido un producto elegido al azar supera el umbral que pongas. Es la probabilidad de «pasarse».'
+};
 const num = (s: string) => (s.trim() === '' ? undefined : Number(s));
 
 type Last = { key: string; rows: Row[]; v: string; over?: number; id: number; baseId?: number; scenario: string; n: number; seed: number };
@@ -68,15 +81,15 @@ export default function Simulation({ v, meta, focus }: { v: string; meta: VarMet
   return (
     <>
       <div className="fields">
-        <label>Escenario
-          <select value={sc} onChange={(e) => setSc(e.target.value)}>{SC.map(([id, t]) => <option key={id} value={id}>{t}</option>)}</select>
+        <label htmlFor="sim-sc"><span>Escenario<Hint title="¿Qué simula este escenario?" left>{SC_HELP[sc]}</Hint></span>
+          <select id="sim-sc" value={sc} onChange={(e) => setSc(e.target.value)}>{SC.map(([id, t]) => <option key={id} value={id}>{t}</option>)}</select>
         </label>
         {sc === 'D' && <>
-          <label>Máx. calorías<input inputMode="numeric" value={f.cal} onChange={(e) => setF({ ...f, cal: e.target.value })} placeholder="sin límite" /></label>
-          <label>Máx. sodio (mg)<input inputMode="numeric" value={f.sod} onChange={(e) => setF({ ...f, sod: e.target.value })} placeholder="sin límite" /></label>
-          <label>Mín. proteína (g)<input inputMode="numeric" value={f.prot} onChange={(e) => setF({ ...f, prot: e.target.value })} placeholder="sin límite" /></label>
+          <label htmlFor="sim-cal"><span>Máx. calorías<Hint left>Deja fuera los productos con más calorías que este número. Vacío = sin límite.</Hint></span><input id="sim-cal" inputMode="numeric" value={f.cal} onChange={(e) => setF({ ...f, cal: e.target.value })} placeholder="sin límite" /></label>
+          <label htmlFor="sim-sod"><span>Máx. sodio (mg)<Hint left>Deja fuera los productos con más sodio que este número. La recomendación diaria ronda los 2,300 mg.</Hint></span><input id="sim-sod" inputMode="numeric" value={f.sod} onChange={(e) => setF({ ...f, sod: e.target.value })} placeholder="sin límite" /></label>
+          <label htmlFor="sim-prot"><span>Mín. proteína (g)<Hint>Solo deja los productos con al menos esta proteína. Vacío = sin mínimo.</Hint></span><input id="sim-prot" inputMode="numeric" value={f.prot} onChange={(e) => setF({ ...f, prot: e.target.value })} placeholder="sin límite" /></label>
         </>}
-        {sc === 'E2' && <label>Umbral ({meta.unit})<input inputMode="numeric" value={thr} onChange={(e) => setThr(e.target.value)} placeholder={String(meta.threshold)} /></label>}
+        {sc === 'E2' && <label htmlFor="sim-thr"><span>Umbral ({meta.unit})<Hint>El valor que no quieres pasar. El resultado dice qué porcentaje de las elecciones al azar lo supera.</Hint></span><input id="sim-thr" inputMode="numeric" value={thr} onChange={(e) => setThr(e.target.value)} placeholder={String(meta.threshold)} /></label>}
         <button className="btn" onClick={run} disabled={busy}>{busy ? 'Simulando…' : stale ? 'Actualizar' : 'Simular'}</button>
       </div>
       <p className="note">
@@ -85,9 +98,9 @@ export default function Simulation({ v, meta, focus }: { v: string; meta: VarMet
       <details className="adv">
         <summary>Opciones avanzadas y cómo reproducir</summary>
         <div className="fields">
-          <label>Repeticiones<input type="number" min={100} max={100000} step={1000} value={n} onChange={(e) => setN(Number(e.target.value))} /></label>
-          <label>Semilla<input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} /></label>
-          {sc !== 'E2' && <label>Marcar umbral ({meta.unit})<input inputMode="numeric" value={thr} onChange={(e) => setThr(e.target.value)} placeholder="ninguno" /></label>}
+          <label htmlFor="sim-n"><span>Repeticiones<Hint left>Cuántas veces se elige un producto al azar. Más repeticiones dan un resultado más estable, pero tardan más. 10,000 es un buen punto.</Hint></span><input id="sim-n" type="number" min={100} max={100000} step={1000} value={n} onChange={(e) => setN(Number(e.target.value))} /></label>
+          <label htmlFor="sim-seed"><span>Semilla<Hint left>Número que arranca el azar. Misma semilla y mismos ajustes dan siempre el mismo resultado; así cualquiera puede repetir la corrida.</Hint></span><input id="sim-seed" type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} /></label>
+          {sc !== 'E2' && <label htmlFor="sim-mark"><span>Marcar umbral ({meta.unit})<Hint left>Dibuja una línea en el valor que pongas y muestra qué porcentaje de productos lo pasa. Es opcional.</Hint></span><input id="sim-mark" inputMode="numeric" value={thr} onChange={(e) => setThr(e.target.value)} placeholder="ninguno" /></label>}
         </div>
         <p className="note">Misma semilla y mismos ajustes dan siempre el mismo resultado.</p>
         <pre className="repro">{`curl -X POST $API/api/simulate \\\n  -H 'Content-Type: application/json' \\\n  -d '${key}'`}</pre>
@@ -98,6 +111,7 @@ export default function Simulation({ v, meta, focus }: { v: string; meta: VarMet
       {!last && !err && <p className="note">Elige un escenario y pulsa «Simular».</p>}
       {last && (
         <>
+          <h3 className="rhead">Resultado<Hint title="Cómo leerlo" left>Cada fila es un grupo. La barra va del valor bajo al alto: la caja es donde está la mitad central de las elecciones, la marca gruesa es la mediana y el número grande es la media. P95 es el valor que el 95% no supera. Si hay «Δ», es el cambio frente al menú completo.</Hint></h3>
           <ul className="findings">{lines.map((l, i) => <li key={i}><mark>{l}</mark></li>)}</ul>
           <div className="seg" role="group" aria-label="Forma de ver">
             <button aria-pressed={!raw} onClick={() => setRaw(false)}>Lectura</button>

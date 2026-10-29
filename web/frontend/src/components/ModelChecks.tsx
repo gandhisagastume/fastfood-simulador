@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { fmt, pct, type VarMeta } from '../lib/stats';
+import { Hint } from './Hint';
 
 const CURVES = [
   ['empirical', 'Empírica (datos)', 'var(--ink)', 3],
@@ -46,7 +47,7 @@ export function FitBody({ fit, err, meta }: { fit: any; err: string; meta: VarMe
       <div className="tablewrap">
         <table className="data">
           <caption className="sr">Bondad de ajuste por distribución</caption>
-          <thead><tr><th scope="col">Distribución</th><th scope="col">Parámetros</th><th className="num">D (KS)</th><th className="num">AIC</th><th scope="col">¿Ajusta?</th></tr></thead>
+          <thead><tr><th scope="col">Distribución</th><th scope="col">Parámetros</th><th className="num">D (KS)<Hint title="D (prueba KS)" left>La mayor distancia entre la curva de los datos y la de la distribución. Cuanto más cerca de 0, mejor; si es menor que el valor crítico (abajo), la distribución ajusta.</Hint></th><th className="num">AIC<Hint title="AIC" left>Puntaje para comparar distribuciones: gana la más baja. Se usa de apoyo cuando D no decide.</Hint></th><th scope="col">¿Ajusta?</th></tr></thead>
           <tbody>
             {fit.fits.map((f: any) => (
               <tr key={f.dist}>
@@ -98,7 +99,7 @@ export function Validation({ v, meta }: { v: string; meta: VarMeta }) {
         <table className="data">
           <caption className="sr">Diferencia relativa entre la media simulada y la real según el número de repeticiones</caption>
           <thead><tr>
-            <th scope="col">Grupo</th><th className="num">Media real</th>
+            <th scope="col">Grupo</th><th className="num">Media real<Hint left>Promedio de los productos reales del grupo. Es la referencia contra la que se compara la simulación.</Hint></th>
             {ns.map((n) => <th key={n} className="num">{n.toLocaleString('en-US')} rep.</th>)}
           </tr></thead>
           <tbody>
